@@ -1,7 +1,9 @@
 define([
 	"skylark-jquery",
-	"../../Selectize"
-],function($,Selectize) {
+	"../../Selectize",
+	"../../constants",
+	"../../utils"
+],function($,Selectize,constants,utils) {
 	/**
 	 * Plugin: "optgroup_columns" (selectize.js)
 	 * Copyright (c) 2013 Simon Hewitt & contributors
@@ -38,7 +40,7 @@ define([
 			return function(e) {
 				var index, $option, $options, $optgroup;
 
-				if (this.isOpen && (e.keyCode === KEY_LEFT || e.keyCode === KEY_RIGHT)) {
+				if (this.isOpen && (e.keyCode === constants.KEY_LEFT || e.keyCode === constants.KEY_RIGHT)) {
 					self.ignoreHover = true;
 					$optgroup = this.$activeOption.closest('[data-group]');
 					index = $optgroup.find('[data-selectable]').index(this.$activeOption);
@@ -104,8 +106,8 @@ define([
 		};
 
 		if (options.equalizeHeight || options.equalizeWidth) {
-			hook.after(this, 'positionDropdown', equalizeSizes);
-			hook.after(this, 'refreshOptions', equalizeSizes);
+			utils.hook.after(this, 'positionDropdown', equalizeSizes);
+			utils.hook.after(this, 'refreshOptions', equalizeSizes);
 		}
 
 

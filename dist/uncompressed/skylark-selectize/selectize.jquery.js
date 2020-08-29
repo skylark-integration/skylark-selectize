@@ -1,9 +1,10 @@
 define([
 	"skylark-jquery",
 	"./Selectize",
+	"./constants",
 	"./defaults",
 	"./utils"
-],function($,Selectize,utils) {
+],function($,Selectize,constants,defaults,utils) {
 	$.fn.selectize = function(settings_user) {
 		var defaults             = $.fn.selectize.defaults;
 		var settings             = $.extend({}, defaults, settings_user);
@@ -165,7 +166,7 @@ define([
 
 	$.fn.selectize.defaults = Selectize.defaults;
 	$.fn.selectize.support = {
-		validity: SUPPORTS_VALIDITY_API
+		validity: constants.SUPPORTS_VALIDITY_API
 	};
 
 	return $;

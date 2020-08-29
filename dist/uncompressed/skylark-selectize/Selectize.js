@@ -3,10 +3,12 @@ define([
 	"skylark-jquery",
 	"./constants",
 	"./utils",
+	"./Sifter",
+	"./contrib/MicroPlugin",
 	"./contrib/microevent",
 	"./contrib/highlight"
 	
-],function(skylark,$,constants,utils,MicroEvent,highlight){
+],function(skylark,$,constants,utils,Sifter,MicroPlugin,MicroEvent,highlight){
 	var Selectize = function($input, settings) {
 		var key, i, n, dir, input, self = this;
 		input = $input[0];
@@ -23,7 +25,7 @@ define([
 			settings         : settings,
 			$input           : $input,
 			tabIndex         : $input.attr('tabindex') || '',
-			tagType          : input.tagName.toLowerCase() === 'select' ? TAG_SELECT : TAG_INPUT,
+			tagType          : input.tagName.toLowerCase() === 'select' ? constants.TAG_SELECT : constants.TAG_INPUT,
 			rtl              : /rtl/i.test(dir),
 
 			eventNS          : '.selectize' + (++Selectize.count),
@@ -97,16 +99,7 @@ define([
 
 	MicroEvent.mixin(Selectize);
 
-	if(typeof MicroPlugin !== "undefined"){
-		MicroPlugin.mixin(Selectize);
-	}else{
-		utils.logError("Dependency MicroPlugin is missing",
-			{explanation:
-				"Make sure you either: (1) are using the \"standalone\" "+
-				"version of Selectize, or (2) require MicroPlugin before you "+
-				"load Selectize."}
-		);
-	}
+	MicroPlugin.mixin(Selectize);
 
 
 	// methods
@@ -167,7 +160,7 @@ define([
 				$dropdown.addClass(classes_plugins);
 			}
 
-			if ((settings.maxItems === null || settings.maxItems > 1) && self.tagType === TAG_SELECT) {
+			if ((settings.maxItems === null || settings.maxItems > 1) && self.tagType === constants.TAG_SELECT) {
 				$input.attr('multiple', 'multiple');
 			}
 
@@ -219,15 +212,15 @@ define([
 			});
 
 			$document.on('keydown' + eventNS, function(e) {
-				self.isCmdDown = e[IS_MAC ? 'metaKey' : 'ctrlKey'];
-				self.isCtrlDown = e[IS_MAC ? 'altKey' : 'ctrlKey'];
+				self.isCmdDown = e[constants.IS_MAC ? 'metaKey' : 'ctrlKey'];
+				self.isCtrlDown = e[constants.IS_MAC ? 'altKey' : 'ctrlKey'];
 				self.isShiftDown = e.shiftKey;
 			});
 
 			$document.on('keyup' + eventNS, function(e) {
-				if (e.keyCode === KEY_CTRL) self.isCtrlDown = false;
-				if (e.keyCode === KEY_SHIFT) self.isShiftDown = false;
-				if (e.keyCode === KEY_CMD) self.isCmdDown = false;
+				if (e.keyCode === constants.KEY_CTRL) self.isCtrlDown = false;
+				if (e.keyCode === constants.KEY_SHIFT) self.isShiftDown = false;
+				if (e.keyCode === constants.KEY_CMD) self.isCmdDown = false;
 			});
 
 			$document.on('mousedown' + eventNS, function(e) {
@@ -267,7 +260,7 @@ define([
 			}
 
 			// feature detect for the validation API
-			if (SUPPORTS_VALIDITY_API) {
+			if (constants.SUPPORTS_VALIDITY_API) {
 				$input.on('invalid' + eventNS, function(e) {
 					e.preventDefault();
 					self.isInvalid = true;
@@ -482,7 +475,7 @@ define([
 			var self = this;
 
 			if (self.isLocked) {
-				if (e.keyCode !== KEY_TAB) {
+				if (e.keyCode !== constants.KEY_TAB) {
 					e.preventDefault();
 				}
 				return;
@@ -556,7 +549,7 @@ define([
 					return;
 			}
 
-			if ((self.isFull() || self.isInputHidden) && !(IS_MAC ? e.metaKey : e.ctrlKey)) {
+			if ((self.isFull() || self.isInputHidden) && !(constants.IS_MAC ? e.metaKey : e.ctrlKey)) {
 				e.preventDefault();
 				return;
 			}
@@ -790,7 +783,7 @@ define([
 		 * @returns {mixed}
 		 */
 		getValue: function() {
-			if (this.tagType === TAG_SELECT && this.$input.attr('multiple')) {
+			if (this.tagType === constants.TAG_SELECT && this.$input.attr('multiple')) {
 				return this.items;
 			} else {
 				return this.items.join(this.settings.delimiter);
@@ -897,7 +890,7 @@ define([
 
 			self.$activeOption = $option.addClass('active');
 
-			if (scroll || !isset(scroll)) {
+			if (scroll || !utils.isset(scroll)) {
 
 				height_menu   = self.$dropdown_content.height();
 				height_item   = self.$activeOption.outerHeight(true);
@@ -1619,7 +1612,7 @@ define([
 				return data;
 			};
 
-			var create = once(function(data) {
+			var create = utils.once(function(data) {
 				self.unlock();
 
 				if (!data || typeof data !== 'object') return callback();
@@ -1727,7 +1720,7 @@ define([
 			var i, n, options, label, self = this;
 			opts = opts || {};
 
-			if (self.tagType === TAG_SELECT) {
+			if (self.tagType === constants.TAG_SELECT) {
 				options = [];
 				for (i = 0, n = self.items.length; i < n; i++) {
 					label = self.options[self.items[i]][self.settings.labelField] || '';

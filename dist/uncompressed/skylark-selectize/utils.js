@@ -1,4 +1,7 @@
-define([],function() {
+define([
+	"skylark-jquery",
+	"./constants"	
+],function($,constants) {
 	/**
 	 * Determines if the provided value has been defined.
 	 *
@@ -223,6 +226,7 @@ define([],function() {
 		$to.css(styles);
 	};
 
+	var $testInput;
 	/**
 	 * Measures the width of a string within a
 	 * parent element (in pixels).
@@ -236,8 +240,8 @@ define([],function() {
 			return 0;
 		}
 
-		if (!Selectize.$testInput) {
-			Selectize.$testInput = $('<span />').css({
+		if (!$testInput) {
+			$testInput = $('<span />').css({
 				position: 'absolute',
 				top: -99999,
 				left: -99999,
@@ -247,9 +251,9 @@ define([],function() {
 			}).appendTo('body');
 		}
 
-		Selectize.$testInput.text(str);
+		$testInput.text(str);
 
-		transferStyles($parent, Selectize.$testInput, [
+		transferStyles($parent, $testInput, [
 			'letterSpacing',
 			'fontSize',
 			'fontFamily',
@@ -257,7 +261,7 @@ define([],function() {
 			'textTransform'
 		]);
 
-		return Selectize.$testInput.width();
+		return $testInput.width();
 	};
 
 	/**
@@ -292,13 +296,13 @@ define([],function() {
 					keyCode === 32 // space
 				);
 
-				if (keyCode === KEY_DELETE || keyCode === KEY_BACKSPACE) {
+				if (keyCode === constants.KEY_DELETE || keyCode === constants.KEY_BACKSPACE) {
 					selection = getSelection($input[0]);
 					if (selection.length) {
 						value = value.substring(0, selection.start) + value.substring(selection.start + selection.length);
-					} else if (keyCode === KEY_BACKSPACE && selection.start) {
+					} else if (keyCode === constants.KEY_BACKSPACE && selection.start) {
 						value = value.substring(0, selection.start - 1) + value.substring(selection.start + 1);
-					} else if (keyCode === KEY_DELETE && typeof selection.start !== 'undefined') {
+					} else if (keyCode === constants.KEY_DELETE && typeof selection.start !== 'undefined') {
 						value = value.substring(0, selection.start) + value.substring(selection.start + 1);
 					}
 				} else if (printable) {
@@ -355,6 +359,7 @@ define([],function() {
 		escape_html,
 		escape_replace,
 		hook,
+		once,
 		debounce,
 		debounce_events,
 		watchChildEvent,

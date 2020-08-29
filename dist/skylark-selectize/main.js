@@ -5,5 +5,5 @@
  * @link https://github.com/skylark-integration/skylark-selectize/
  * @license MIT
  */
-define(["./Selectize","./selectize.jquery"],function(e){return e});
+define(["./Selectize","./selectize.jquery","./plugins/drag_drop/plugin","./plugins/dropdown_header/plugin","./plugins/optgroup_columns/plugin","./plugins/remove_button/plugin","./plugins/restore_on_backspace/plugin"],function(n){return n});
 //# sourceMappingURL=sourcemaps/main.js.map
